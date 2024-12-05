@@ -54,6 +54,23 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/explore-details', async (req, res) => {
+            const cursor = reviewCollections.find().limit(6)
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+        app.get('/explore-details/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await reviewCollections.findOne(query)
+            res.send(result)
+        })
+        app.get('/my-reviews', async (req, res) => {
+            const cursor = reviewCollections.find()
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
