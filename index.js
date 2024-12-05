@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 const app = express();
@@ -24,6 +24,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         const reviewCollections = client.db('chill-gamersDB').collection('reviews')
+        const watchListCollections = client.db('chill-gamersDB').collection('watchLists')
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
         // Send a ping to confirm a successful connection
@@ -34,9 +35,22 @@ async function run() {
             const result = await reviewCollections.insertOne(addNewReview);
             res.send(result)
         })
+
+        app.post('/watchLists', async (req, res) => {
+            const addNewWatchList = req.body;
+            const result = await watchListCollections.insertOne(addNewWatchList);
+            res.send(result)
+        })
+
         app.get('/reviews', async (req, res) => {
             const cursor = reviewCollections.find()
             const result = await cursor.toArray()
+            res.send(result)
+        })
+        app.get('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await reviewCollections.findOne(query)
             res.send(result)
         })
 
