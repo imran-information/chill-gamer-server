@@ -70,6 +70,31 @@ async function run() {
             const result = await cursor.toArray()
             res.send(result)
         })
+        app.get('/my-reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await reviewCollections.findOne(query)
+            res.send(result)
+        })
+
+        app.patch('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const updateMyReview = {
+                $set: {
+                    coverUrl: coverUrl,
+                    title: title,
+                    description: description,
+                    rating: rating,
+                    year: year,
+                    genre: genre,
+                    name: displayName,
+                    email: email,
+                }
+            }
+            const result = await reviewCollections.updateOne(query, updateMyReview)
+            res.send(result)
+        })
 
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
