@@ -41,6 +41,11 @@ async function run() {
             const result = await watchListCollections.insertOne(addNewWatchList);
             res.send(result)
         })
+        app.get('/watchLists', async (req, res) => {
+            const cursor = watchListCollections.find()
+            const result = await cursor.toArray()
+            res.send(result)
+        })
 
         app.get('/reviews', async (req, res) => {
             const cursor = reviewCollections.find()
